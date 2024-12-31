@@ -1,4 +1,7 @@
-import { Entity } from "typeorm";
+import { Sex } from "@/common/enums";
+import { HealthRecord } from "@/modules/health/entities/health-record.entity";
+import { Production } from "@/modules/production/entities/production.entity";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('animals')
 export class Animal {

@@ -1,3 +1,6 @@
+import { Animal } from "@/modules/animals/entities/animal.entity";
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+
 @Entity('productions')
 export class Production {
     @PrimaryGeneratedColumn('uuid')

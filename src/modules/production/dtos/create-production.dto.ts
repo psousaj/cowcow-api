@@ -1,3 +1,5 @@
+import { IsDateString, IsNumber, IsObject, IsOptional, IsUUID, Min } from "class-validator";
+
 export class CreateProductionDto {
     @IsUUID()
     animalId: string;

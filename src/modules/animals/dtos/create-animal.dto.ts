@@ -1,3 +1,6 @@
+import { Sex } from "@/common/enums";
+import { IsDateString, IsEnum, IsObject, IsOptional, IsString } from "class-validator";
+
 export class CreateAnimalDto {
     @IsString()
     identification: string;

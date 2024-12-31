@@ -11,11 +11,12 @@ export const databaseProviders = [
                 url: env.get('DATABASE_URL'),
                 entities: [__dirname + '../../modules/**/entities/*.entity{.ts,.js}'],
                 migrations: [__dirname + '../database/migrations'],
-                synchronize: true
+                synchronize: true,
+                ssl: true
             })
 
             return dataSource.initialize()
         },
-        Inject: [EnvService],
+        inject: [EnvService],
     }
 ]
