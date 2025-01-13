@@ -8,6 +8,16 @@ export enum Sex {
     FEMALE = 'female'
 }
 
+export enum Repositories {
+    USER = 'USER_REPOSITORY',
+    ANIMAL = 'ANIMAL_REPOSITORY',
+    FINANCIAL = 'FINANCIAL_REPOSITORY',
+    PRODUCTION = 'PRODUCTION_REPOSITORY',
+    HEALTH_EVENT = 'HEALTH_EVENT_REPOSITORY',
+    TRANSACTION = 'TRANSACTION_REPOSITORY',
+    NOTIFICATION = 'NOTIFICATION_REPOSITORY'
+}
+
 export enum HealthEventType {
     VACCINATION = 'vaccination',
     DEWORMING = 'deworming',

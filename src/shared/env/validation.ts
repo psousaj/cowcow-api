@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const envSchema = z.object({
     JWT_SECRET: z.string({ message: 'Necessário informar um secret para o JWT' }),
+    JWT_EXPIRATION: z.string({ message: 'Necessário informar um tempo de expiração para o JWT' }).default('1d'),
     NODE_ENV: z
         .enum(['development', 'test', 'production'])
         .default('development'),
