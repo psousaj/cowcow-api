@@ -1,17 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { HealthRecord } from '../entities/health-record.entity';
+import { Repositories } from '@/common/enums';
+import { CreateHealthRecordDto } from '../dtos/create-health-record.dto';
+import { UpdateHealthRecordDto } from '../dtos/update-health-record.dto';
 
 @Injectable()
 export class HealthService {
     constructor(
-        @InjectRepository(HealthRecord)
+        @Inject(Repositories.HEALTH_EVENT)
         private readonly healthRecordRepository: Repository<HealthRecord>,
     ) { }
 
-    async create(record: HealthRecord): Promise<HealthRecord> {
-        return this.healthRecordRepository.save(record);
+    async create(record: CreateHealthRecordDto): Promise<HealthRecord> {
+        return this.healthRecordRepository.save({
+            ...record,
+            animalId: record.animalId,
+        });
     }
 
     async findAll(): Promise<HealthRecord[]> {
@@ -22,7 +27,7 @@ export class HealthService {
         return this.healthRecordRepository.findOne({ where: { id } });
     }
 
-    async update(id: string, record: HealthRecord): Promise<void> {
+    async update(id: string, record: UpdateHealthRecordDto): Promise<void> {
         await this.healthRecordRepository.update(id, record);
     }
 

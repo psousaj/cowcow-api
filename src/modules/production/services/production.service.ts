@@ -1,16 +1,18 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
+import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Production } from '../entities/production.entity';
+import { Repositories } from '@/common/enums';
+import { CreateProductionDto } from '../dtos/create-production.dto';
+import { UpdateProductionDto } from '../dtos/update-production.dto';
 
 @Injectable()
 export class ProductionService {
     constructor(
-        @InjectRepository(Production)
+        @Inject(Repositories.PRODUCTION)
         private readonly productionRepository: Repository<Production>,
     ) { }
 
-    async create(production: Production): Promise<Production> {
+    async create(production: CreateProductionDto): Promise<Production> {
         return this.productionRepository.save(production);
     }
 
@@ -22,7 +24,7 @@ export class ProductionService {
         return this.productionRepository.findOne({ where: { id } });
     }
 
-    async update(id: string, production: Production): Promise<void> {
+    async update(id: string, production: UpdateProductionDto): Promise<void> {
         await this.productionRepository.update(id, production);
     }
 
