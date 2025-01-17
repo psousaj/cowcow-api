@@ -1,24 +1,21 @@
 import { Role, Sex } from "@/common/enums";
-import { RolesGuard } from "@/modules/auth/guards/roles.guard";
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Animal } from "../entities/animal.entity";
 import { User } from "@/modules/users/entities/user.entity";
 import { CreateAnimalDto } from "../dtos/create-animal.dto";
 import { AnimalsService } from "../services/animals.service";
-import { JwtAuthGuard } from "@/modules/auth/guards/jwt-auth.guard";
 import { Roles } from "@/modules/auth/decorators/roles.decorator";
 import { CurrentUser } from "@/modules/auth/decorators/current-user.decorator";
 import { UpdateAnimalDto } from "../dtos/update-animal.dto";
 
 @ApiTags('Animais')
 @Controller('animals')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class AnimalsController {
     constructor(private readonly animalsService: AnimalsService) { }
 
     @Post()
-    @Roles(Role.OWNER, Role.OPERATOR)
+    @Roles(Role.OWNER)
     @ApiOperation({ summary: 'Criar novo animal' })
     @ApiResponse({ status: 201, description: 'Animal criado com sucesso', type: Animal })
     @ApiResponse({ status: 400, description: 'Dados inválidos' })

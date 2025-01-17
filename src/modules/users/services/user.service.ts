@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Repositories } from '@/common/enums';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -26,7 +27,7 @@ export class UserService {
         return this.userRepository.findOne({ where: { email } });
     }
 
-    async update(id: string, user: Partial<User>): Promise<void> {
+    async update(id: string, user: UpdateUserDto): Promise<void> {
         await this.userRepository.update(id, user);
     }
 

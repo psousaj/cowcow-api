@@ -5,6 +5,7 @@ import { CurrentUser } from "./decorators/current-user.decorator";
 import { LoginDto, RegisterDto } from "./dto/auth.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { AuthService } from "./services/auth.service";
+import { Public } from "./decorators/public.decorator";
 
 @ApiTags('Autenticação')
 @Controller('auth')
@@ -14,6 +15,7 @@ export class AuthController {
     ) { }
 
     @Post('login')
+    @Public()
     @ApiOperation({ summary: 'Login de usuário' })
     @ApiResponse({ status: 200, description: 'Login realizado com sucesso' })
     @ApiResponse({ status: 401, description: 'Credenciais inválidas' })
@@ -31,6 +33,7 @@ export class AuthController {
     }
 
     @Post('register')
+    @Public()
     @ApiOperation({ summary: 'Registro de novo usuário' })
     @ApiResponse({ status: 201, description: 'Usuário registrado com sucesso' })
     @ApiResponse({ status: 409, description: 'Email já registrado' })
@@ -39,7 +42,7 @@ export class AuthController {
     }
 
     @Get('refresh')
-    @UseGuards(JwtAuthGuard)
+    @Public()
     @ApiOperation({ summary: 'Renovar token de acesso' })
     @ApiResponse({ status: 200, description: 'Token renovado com sucesso' })
     @ApiResponse({ status: 401, description: 'Token inválido' })

@@ -4,6 +4,8 @@ import { HealthService } from '../services/health.service';
 import { CreateHealthRecordDto } from '../dtos/create-health-record.dto';
 import { HealthRecord } from '../entities/health-record.entity';
 import { UpdateHealthRecordDto } from '../dtos/update-health-record.dto';
+import { Role } from '@/common/enums';
+import { Roles } from '@/modules/auth/decorators/roles.decorator';
 
 @ApiTags('Saúde do animal')
 @Controller('health-records')
@@ -11,6 +13,7 @@ export class HealthController {
     constructor(private readonly healthService: HealthService) { }
 
     @Post()
+    @Roles(Role.OWNER, Role.OPERATOR)
     @ApiOperation({ summary: 'Cria um novo registro de saúde do animal' })
     @ApiResponse({ status: 201, description: 'Registro de saúde criado com sucesso.', type: HealthRecord })
     @ApiResponse({ status: 400, description: 'Dados inválidos.' })
@@ -19,6 +22,7 @@ export class HealthController {
     }
 
     @Get()
+    @Roles(Role.OWNER, Role.OPERATOR)
     @ApiOperation({ summary: 'Lista todos os registros de saúde dos animais' })
     @ApiResponse({ status: 200, description: 'Lista de registros de saúde dos animais.', type: [HealthRecord] })
     async findAll(): Promise<HealthRecord[]> {
@@ -26,6 +30,7 @@ export class HealthController {
     }
 
     @Get(':id')
+    @Roles(Role.OWNER, Role.OPERATOR)
     @ApiOperation({ summary: 'Busca um registro de saúde do animal pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de saúde do animal encontrado.', type: HealthRecord })
     @ApiResponse({ status: 404, description: 'Registro de saúde do animal não encontrado.' })
@@ -34,6 +39,7 @@ export class HealthController {
     }
 
     @Put(':id')
+    @Roles(Role.OWNER)
     @ApiOperation({ summary: 'Atualiza um registro de saúde do animal pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de saúde do animal atualizado com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro de saúde do animal não encontrado.' })
@@ -42,6 +48,7 @@ export class HealthController {
     }
 
     @Delete(':id')
+    @Roles(Role.OWNER)
     @ApiOperation({ summary: 'Remove um registro de saúde do animal pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de saúde do animal removido com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro de saúde do animal não encontrado.' })

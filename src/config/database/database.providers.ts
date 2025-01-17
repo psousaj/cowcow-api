@@ -1,6 +1,6 @@
 import { EnvService } from "@/shared/env/env.service"
 import { DataSource } from "typeorm"
-
+import * as path from 'path';
 
 export const databaseProviders = [
     {
@@ -9,12 +9,11 @@ export const databaseProviders = [
             const dataSource = new DataSource({
                 type: 'postgres',
                 url: env.get('DATABASE_URL'),
-                entities: [__dirname + '../../modules/**/entities/*.entity{.ts,.js}'],
-                migrations: [__dirname + '../database/migrations'],
+                entities: [path.join(__dirname, '../../modules/**/entities/*.entity{.ts,.js}')],
                 synchronize: true,
                 ssl: true
             })
-
+            console.log(path.join(__dirname, '../../modules/**/entities/*.entity{.ts,.js}'))
             return dataSource.initialize()
         },
         inject: [EnvService],

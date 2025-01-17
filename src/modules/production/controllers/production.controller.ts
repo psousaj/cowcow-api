@@ -4,6 +4,8 @@ import { ProductionService } from '../services/production.service';
 import { Production } from '../entities/production.entity';
 import { CreateProductionDto } from '../dtos/create-production.dto';
 import { UpdateProductionDto } from '../dtos/update-production.dto';
+import { Role } from '@/common/enums';
+import { Roles } from '@/modules/auth/decorators/roles.decorator';
 
 @ApiTags('Produção dos animais')
 @Controller('production')
@@ -11,6 +13,7 @@ export class ProductionController {
     constructor(private readonly productionService: ProductionService) { }
 
     @Post()
+    @Roles(Role.OWNER, Role.OPERATOR)
     @ApiOperation({ summary: 'Cria um novo registro de produção' })
     @ApiResponse({ status: 201, description: 'Registro de produção criado com sucesso.', type: Production })
     @ApiResponse({ status: 400, description: 'Dados inválidos.' })
@@ -19,6 +22,7 @@ export class ProductionController {
     }
 
     @Get()
+    @Roles(Role.OWNER, Role.OPERATOR)
     @ApiOperation({ summary: 'Lista todos os registros de produção' })
     @ApiResponse({ status: 200, description: 'Lista de registros de produção.', type: [Production] })
     async findAll(): Promise<Production[]> {
@@ -26,6 +30,7 @@ export class ProductionController {
     }
 
     @Get(':id')
+    @Roles(Role.OWNER, Role.OPERATOR)
     @ApiOperation({ summary: 'Busca um registro de produção pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de produção encontrado.', type: Production })
     @ApiResponse({ status: 404, description: 'Registro de produção não encontrado.' })
@@ -34,6 +39,7 @@ export class ProductionController {
     }
 
     @Put(':id')
+    @Roles(Role.OWNER, Role.OPERATOR)
     @ApiOperation({ summary: 'Atualiza um registro de produção pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de produção atualizado com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro de produção não encontrado.' })
@@ -42,6 +48,7 @@ export class ProductionController {
     }
 
     @Delete(':id')
+    @Roles(Role.OWNER)
     @ApiOperation({ summary: 'Remove um registro de produção pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de produção removido com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro de produção não encontrado.' })

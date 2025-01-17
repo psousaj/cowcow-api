@@ -9,6 +9,7 @@ import { FinancialModule } from './modules/financial/financial.module';
 import { HealthModule } from './modules/health/health.module';
 import { ProductionModule } from './modules/production/production.module';
 import { UsersModule } from './modules/users/users.module';
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 
 @Module({
     imports: [
@@ -25,5 +26,6 @@ import { UsersModule } from './modules/users/users.module';
         ProductionModule,
         UsersModule
     ],
+    providers: [],
 })
 export class AppModule { }
