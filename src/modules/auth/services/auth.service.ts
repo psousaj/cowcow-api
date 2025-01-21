@@ -1,5 +1,5 @@
 import { User } from "@/modules/users/entities/user.entity";
-import { Injectable, ConflictException } from "@nestjs/common";
+import { Injectable, ConflictException, UnauthorizedException, BadRequestException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { JwtService } from "@nestjs/jwt";
 import { RegisterDto } from "../dto/auth.dto";
@@ -11,7 +11,6 @@ export class AuthService {
     constructor(
         private readonly userService: UserService,
         private readonly jwtService: JwtService,
-        private readonly configService: ConfigService,
     ) { }
 
     async validateUser(email: string, password: string): Promise<any> {
@@ -39,7 +38,7 @@ export class AuthService {
                 name: user.name,
                 role: user.role
             },
-            accessToken: this.jwtService.sign(payload),
+            accessToken: await this.jwtService.signAsync(payload),
         };
     }
 
@@ -66,6 +65,10 @@ export class AuthService {
     }
 
     async refreshToken(user: User) {
+        if (!user) {
+            throw new BadRequestException('Nenhum usuário logado');
+        }
+
         const payload: any = {
             email: user.email,
             sub: user.id,

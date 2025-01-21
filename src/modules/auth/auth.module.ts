@@ -2,7 +2,7 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { APP_GUARD } from "@nestjs/core";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
-import { AuthController } from "./auth.controller";
+import { AuthController } from "./controllers/auth.controller";
 import { RolesGuard } from "./guards/roles.guard";
 import { AuthService } from "./services/auth.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
@@ -20,6 +20,7 @@ import { EnvService } from "@/shared/env/env.service";
             inject: [EnvService],
             imports: [EnvModule],
             useFactory: (envService: EnvService) => ({
+                global: true,
                 secret: envService.get('JWT_SECRET'),
                 signOptions: {
                     expiresIn: envService.get('JWT_EXPIRATION'),
@@ -30,11 +31,7 @@ import { EnvService } from "@/shared/env/env.service";
     controllers: [AuthController],
     providers: [
         AuthService,
-        JwtStrategy,
-        {
-            provide: APP_GUARD,
-            useClass: RolesGuard,
-        },
+        JwtStrategy
     ],
     exports: [AuthService],
 })

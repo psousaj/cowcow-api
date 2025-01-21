@@ -1,11 +1,10 @@
-import { Controller, Post, Body, UnauthorizedException, Get, UseGuards } from "@nestjs/common";
+import { Controller, Post, Body, UnauthorizedException, Get, HttpCode, HttpStatus } from "@nestjs/common";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { User } from "../users/entities/user.entity";
-import { CurrentUser } from "./decorators/current-user.decorator";
-import { LoginDto, RegisterDto } from "./dto/auth.dto";
-import { JwtAuthGuard } from "./guards/jwt-auth.guard";
-import { AuthService } from "./services/auth.service";
-import { Public } from "./decorators/public.decorator";
+import { User } from "../../users/entities/user.entity";
+import { CurrentUser } from "../decorators/current-user.decorator";
+import { LoginDto, RegisterDto } from "../dto/auth.dto";
+import { AuthService } from "../services/auth.service";
+import { Public } from "../decorators/public.decorator";
 
 @ApiTags('Autenticação')
 @Controller('auth')
@@ -15,6 +14,7 @@ export class AuthController {
     ) { }
 
     @Post('login')
+    @HttpCode(HttpStatus.OK)
     @Public()
     @ApiOperation({ summary: 'Login de usuário' })
     @ApiResponse({ status: 200, description: 'Login realizado com sucesso' })
@@ -42,7 +42,6 @@ export class AuthController {
     }
 
     @Get('refresh')
-    @Public()
     @ApiOperation({ summary: 'Renovar token de acesso' })
     @ApiResponse({ status: 200, description: 'Token renovado com sucesso' })
     @ApiResponse({ status: 401, description: 'Token inválido' })
