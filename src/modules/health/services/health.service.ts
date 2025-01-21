@@ -28,6 +28,10 @@ export class HealthService {
     }
 
     async update(id: string, record: UpdateHealthRecordDto): Promise<void> {
+        if (!await this.healthRecordRepository.existsBy({ id })) {
+            throw new Error('Nenhum registro encontrado');
+        }
+
         await this.healthRecordRepository.update(id, record);
     }
 

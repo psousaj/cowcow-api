@@ -1,10 +1,11 @@
-import { Controller, Post, Get, Param, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Delete, Patch, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { FinancialService } from '../services/financial.service';
 import { CreateFinancialRecordDto } from '../dtos/create-financial-record.dto';
 import { FinancialRecord } from '../entities/financial-record.entity';
 import { Role } from '@/common/enums';
 import { Roles } from '@/modules/auth/decorators/roles.decorator';
+import { EmptyUpdateBodyPipe } from '@/common/pipes/empty-update-body.pipe';
 
 @ApiTags('Financeiro')
 @Controller('financial-records')
@@ -33,16 +34,16 @@ export class FinancialController {
     @ApiOperation({ summary: 'Busca um registro financeiro pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro financeiro encontrado.', type: FinancialRecord })
     @ApiResponse({ status: 404, description: 'Registro financeiro não encontrado.' })
-    async findOne(@Param('id') id: string): Promise<FinancialRecord> {
+    async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<FinancialRecord> {
         return this.financialService.findOne(id);
     }
 
-    @Put(':id')
+    @Patch(':id')
     @Roles(Role.OWNER)
     @ApiOperation({ summary: 'Atualiza um registro financeiro pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro financeiro atualizado com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro financeiro não encontrado.' })
-    async update(@Param('id') id: string, @Body() updateFinancialRecordDto: CreateFinancialRecordDto): Promise<void> {
+    async update(@Param('id', new ParseUUIDPipe()) id: string, @Body(new EmptyUpdateBodyPipe()) updateFinancialRecordDto: CreateFinancialRecordDto): Promise<void> {
         await this.financialService.update(id, updateFinancialRecordDto);
     }
 
@@ -51,7 +52,7 @@ export class FinancialController {
     @ApiOperation({ summary: 'Remove um registro financeiro pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro financeiro removido com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro financeiro não encontrado.' })
-    async remove(@Param('id') id: string): Promise<void> {
+    async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
         await this.financialService.remove(id);
     }
 }

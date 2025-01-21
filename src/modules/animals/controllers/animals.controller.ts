@@ -1,5 +1,5 @@
 import { Role, Sex } from "@/common/enums";
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Animal } from "../entities/animal.entity";
 import { CreateAnimalDto } from "../dtos/create-animal.dto";
@@ -7,6 +7,7 @@ import { AnimalsService } from "../services/animals.service";
 import { Roles } from "@/modules/auth/decorators/roles.decorator";
 import { CurrentUser } from "@/modules/auth/decorators/current-user.decorator";
 import { UpdateAnimalDto } from "../dtos/update-animal.dto";
+import { EmptyUpdateBodyPipe } from "@/common/pipes/empty-update-body.pipe";
 
 @ApiTags('Animais')
 @Controller('animals')
@@ -39,7 +40,7 @@ export class AnimalsController {
     @ApiParam({ name: 'id', description: 'ID do animal' })
     @ApiResponse({ status: 200, description: 'Animal encontrado', type: Animal })
     @ApiResponse({ status: 404, description: 'Animal não encontrado' })
-    findOne(@Param('id') id: string) {
+    findOne(@Param('id', new ParseUUIDPipe()) id: string) {
         return this.animalsService.findOne(id);
     }
 
@@ -49,7 +50,7 @@ export class AnimalsController {
     @ApiParam({ name: 'id', description: 'ID do animal' })
     @ApiResponse({ status: 200, description: 'Animal atualizado', type: Animal })
     @ApiResponse({ status: 404, description: 'Animal não encontrado' })
-    update(@Param('id') id: string, @Body() updateAnimalDto: UpdateAnimalDto) {
+    update(@Param('id', new ParseUUIDPipe()) id: string, @Body(new EmptyUpdateBodyPipe()) updateAnimalDto: UpdateAnimalDto) {
         return this.animalsService.update(id, updateAnimalDto);
     }
 
@@ -59,7 +60,7 @@ export class AnimalsController {
     @ApiParam({ name: 'id', description: 'ID do animal' })
     @ApiResponse({ status: 200, description: 'Animal removido' })
     @ApiResponse({ status: 404, description: 'Animal não encontrado' })
-    remove(@Param('id') id: string) {
+    remove(@Param('id', new ParseUUIDPipe()) id: string) {
         return this.animalsService.remove(id);
     }
 }

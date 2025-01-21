@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Delete, Patch, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { HealthService } from '../services/health.service';
 import { CreateHealthRecordDto } from '../dtos/create-health-record.dto';
@@ -6,6 +6,7 @@ import { HealthRecord } from '../entities/health-record.entity';
 import { UpdateHealthRecordDto } from '../dtos/update-health-record.dto';
 import { Role } from '@/common/enums';
 import { Roles } from '@/modules/auth/decorators/roles.decorator';
+import { EmptyUpdateBodyPipe } from '@/common/pipes/empty-update-body.pipe';
 
 @ApiTags('Saúde do animal')
 @Controller('health-records')
@@ -34,16 +35,16 @@ export class HealthController {
     @ApiOperation({ summary: 'Busca um registro de saúde do animal pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de saúde do animal encontrado.', type: HealthRecord })
     @ApiResponse({ status: 404, description: 'Registro de saúde do animal não encontrado.' })
-    async findOne(@Param('id') id: string): Promise<HealthRecord> {
+    async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<HealthRecord> {
         return this.healthService.findOne(id);
     }
 
-    @Put(':id')
+    @Patch(':id')
     @Roles(Role.OWNER)
     @ApiOperation({ summary: 'Atualiza um registro de saúde do animal pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de saúde do animal atualizado com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro de saúde do animal não encontrado.' })
-    async update(@Param('id') id: string, @Body() updateFinancialRecordDto: UpdateHealthRecordDto): Promise<void> {
+    async update(@Param('id', new ParseUUIDPipe()) id: string, @Body(new EmptyUpdateBodyPipe()) updateFinancialRecordDto: UpdateHealthRecordDto): Promise<void> {
         await this.healthService.update(id, updateFinancialRecordDto);
     }
 
@@ -52,7 +53,7 @@ export class HealthController {
     @ApiOperation({ summary: 'Remove um registro de saúde do animal pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de saúde do animal removido com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro de saúde do animal não encontrado.' })
-    async remove(@Param('id') id: string): Promise<void> {
+    async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
         await this.healthService.remove(id);
     }
 }

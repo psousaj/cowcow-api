@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Param, Body, Put, Delete } from '@nestjs/common';
+import { Controller, Post, Get, Param, Body, Delete, Patch, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ProductionService } from '../services/production.service';
 import { Production } from '../entities/production.entity';
@@ -6,6 +6,7 @@ import { CreateProductionDto } from '../dtos/create-production.dto';
 import { UpdateProductionDto } from '../dtos/update-production.dto';
 import { Role } from '@/common/enums';
 import { Roles } from '@/modules/auth/decorators/roles.decorator';
+import { EmptyUpdateBodyPipe } from '@/common/pipes/empty-update-body.pipe';
 
 @ApiTags('Produção dos animais')
 @Controller('production')
@@ -34,16 +35,16 @@ export class ProductionController {
     @ApiOperation({ summary: 'Busca um registro de produção pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de produção encontrado.', type: Production })
     @ApiResponse({ status: 404, description: 'Registro de produção não encontrado.' })
-    async findOne(@Param('id') id: string): Promise<Production> {
+    async findOne(@Param('id', new ParseUUIDPipe()) id: string): Promise<Production> {
         return this.productionService.findOne(id);
     }
 
-    @Put(':id')
+    @Patch(':id')
     @Roles(Role.OWNER, Role.OPERATOR)
     @ApiOperation({ summary: 'Atualiza um registro de produção pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de produção atualizado com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro de produção não encontrado.' })
-    async update(@Param('id') id: string, @Body() updateProductionDto: UpdateProductionDto): Promise<void> {
+    async update(@Param('id', new ParseUUIDPipe()) id: string, @Body(new EmptyUpdateBodyPipe()) updateProductionDto: UpdateProductionDto): Promise<void> {
         await this.productionService.update(id, updateProductionDto);
     }
 
@@ -52,7 +53,7 @@ export class ProductionController {
     @ApiOperation({ summary: 'Remove um registro de produção pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de produção removido com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro de produção não encontrado.' })
-    async remove(@Param('id') id: string): Promise<void> {
+    async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
         await this.productionService.remove(id);
     }
 }

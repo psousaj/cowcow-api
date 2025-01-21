@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, ParseUUIDPipe, Patch, HttpCode, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseUUIDPipe, Patch, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
@@ -7,6 +7,7 @@ import { User } from '../entities/user.entity';
 import { Role } from '@/common/enums';
 import { Roles } from '@/modules/auth/decorators/roles.decorator';
 import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
+import { EmptyUpdateBodyPipe } from '@/common/pipes/empty-update-body.pipe';
 
 @ApiTags('Usuários')
 @Controller('users')
@@ -45,7 +46,7 @@ export class UserController {
     @ApiOperation({ summary: 'Atualiza um usuário pelo ID' })
     @ApiResponse({ status: 200, description: 'Usuário atualizado com sucesso.', type: User })
     @ApiResponse({ status: 404, description: 'Usuário não encontrado.' })
-    async update(@Param('id', new ParseUUIDPipe()) id: string, @Body() updateUserDto: UpdateUserDto): Promise<void> {
+    async update(@Param('id', new ParseUUIDPipe()) id: string, @Body(new EmptyUpdateBodyPipe()) updateUserDto: UpdateUserDto): Promise<void> {
         await this.userService.update(id, updateUserDto);
     }
 
