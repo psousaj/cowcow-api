@@ -1,5 +1,5 @@
 import { ExpenseCategory, TransactionType } from "@/common/enums";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('financial_records')
 export class FinancialRecord {
@@ -28,6 +28,6 @@ export class FinancialRecord {
         paymentMethod?: string;
     };
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', update: false })
     createdAt: Date;
 }

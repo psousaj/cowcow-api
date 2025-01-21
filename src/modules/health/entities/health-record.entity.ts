@@ -1,6 +1,6 @@
 import { HealthEventType } from "@/common/enums";
 import { Animal } from "@/modules/animals/entities/animal.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('health_records')
 export class HealthRecord {
@@ -30,6 +30,6 @@ export class HealthRecord {
         cost?: number;
     };
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', update: false })
     createdAt: Date;
 }

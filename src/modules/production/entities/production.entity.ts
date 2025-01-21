@@ -1,5 +1,5 @@
 import { Animal } from "@/modules/animals/entities/animal.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('productions')
 export class Production {
@@ -21,6 +21,6 @@ export class Production {
         notes?: string;
     };
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', update: false })
     createdAt: Date;
 }

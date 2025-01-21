@@ -2,7 +2,6 @@ import { Role, Sex } from "@/common/enums";
 import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from "@nestjs/common";
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Animal } from "../entities/animal.entity";
-import { User } from "@/modules/users/entities/user.entity";
 import { CreateAnimalDto } from "../dtos/create-animal.dto";
 import { AnimalsService } from "../services/animals.service";
 import { Roles } from "@/modules/auth/decorators/roles.decorator";
@@ -20,8 +19,8 @@ export class AnimalsController {
     @ApiResponse({ status: 201, description: 'Animal criado com sucesso', type: Animal })
     @ApiResponse({ status: 400, description: 'Dados inválidos' })
     @ApiResponse({ status: 401, description: 'Não autorizado' })
-    create(@Body() createAnimalDto: CreateAnimalDto, @CurrentUser() user: User) {
-        return this.animalsService.create({ ...createAnimalDto, id: user.id });
+    create(@Body() createAnimalDto: CreateAnimalDto) {
+        return this.animalsService.create({ ...createAnimalDto });
     }
 
     @Get()

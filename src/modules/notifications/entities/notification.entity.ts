@@ -1,6 +1,6 @@
 import { NotificationStatus, NotificationType } from "@/common/enums";
 import { User } from "@/modules/users/entities/user.entity";
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('notifications')
 export class Notification {
@@ -25,6 +25,6 @@ export class Notification {
     @Column({ type: 'timestamp', nullable: true })
     sentAt: Date;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', update: false })
     createdAt: Date;
 }

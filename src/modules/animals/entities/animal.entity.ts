@@ -1,7 +1,7 @@
 import { Sex } from "@/common/enums";
 import { HealthRecord } from "@/modules/health/entities/health-record.entity";
 import { Production } from "@/modules/production/entities/production.entity";
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity('animals')
 export class Animal {
@@ -36,9 +36,9 @@ export class Animal {
     @OneToMany(() => HealthRecord, health => health.animal)
     healthRecords: HealthRecord[];
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @CreateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP', update: false })
     createdAt: Date;
 
-    @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+    @UpdateDateColumn({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     updatedAt: Date;
 }
