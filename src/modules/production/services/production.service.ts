@@ -4,24 +4,36 @@ import { Production } from '../entities/production.entity';
 import { Repositories } from '@/common/enums';
 import { CreateProductionDto } from '../dtos/create-production.dto';
 import { UpdateProductionDto } from '../dtos/update-production.dto';
+import { AnimalsService } from '@/modules/animals/services/animals.service';
 
 @Injectable()
 export class ProductionService {
     constructor(
         @Inject(Repositories.PRODUCTION)
         private readonly productionRepository: Repository<Production>,
+        private readonly animalsService: AnimalsService
     ) { }
 
-    async create(production: CreateProductionDto): Promise<Production> {
-        return this.productionRepository.save(production);
+    async create({ animalId, ...production }: CreateProductionDto): Promise<Production> {
+        const newProduction = await this.productionRepository.save({ ...production, animal: { id: animalId } });
+        await this.animalsService.updateAverageProduction(animalId);
+        return newProduction;
     }
 
     async findAll(): Promise<Production[]> {
-        return this.productionRepository.find();
+        return await this.productionRepository.find({ relations: ['animal'], select: { animal: { id: true } } });
     }
 
     async findOne(id: string): Promise<Production> {
-        return this.productionRepository.findOne({ where: { id } });
+        return await this.productionRepository.findOne({
+            where: { id },
+            relations: ['animal'],
+            select: {
+                animal: {
+                    id: true
+                }
+            }
+        });
     }
 
     async update(id: string, production: UpdateProductionDto): Promise<void> {
