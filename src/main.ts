@@ -6,6 +6,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard';
 import { RolesGuard } from './modules/auth/guards/roles.guard';
 import { Reflector } from '@nestjs/core';
+import { TypeOrmExceptionFilter } from './common/filters/typeorm-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,15 +22,21 @@ async function bootstrap() {
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup("docs", app, swaggerDocument);
 
-  app.useGlobalPipes(new ValidationPipe());
   if (configService.get("NODE_ENV") !== "development") {
     app.setGlobalPrefix('api/v1');
   };
 
+  // GLOBAL PIPES
+  app.useGlobalPipes(new ValidationPipe());
+
+  // GLOBAL GUARDS
   app.useGlobalGuards(
     new JwtAuthGuard(app.get(Reflector)),
     new RolesGuard(app.get(Reflector))
   )
+
+  // GLOBAL FILTERS
+  app.useGlobalFilters(new TypeOrmExceptionFilter())
 
   await app.listen(configService.get("PORT"), "0.0.0.0");
 }
