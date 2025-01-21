@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { User } from '../entities/user.entity';
 import { Repositories } from '@/common/enums';
@@ -27,8 +27,17 @@ export class UserService {
         return this.userRepository.findOne({ where: { email } });
     }
 
-    async update(id: string, user: UpdateUserDto): Promise<void> {
-        await this.userRepository.update(id, user);
+    async update(id: string, updateduser: UpdateUserDto): Promise<User> {
+        if (!await this.userRepository.existsBy({ id })) {
+            throw new BadRequestException('Usuário não encontrado');
+        }
+
+        // Do not update user if it is empty or if the password is being updated
+        if (Object.keys(updateduser).length === 0 || updateduser.password) {
+            return
+        }
+
+        await this.userRepository.update(id, updateduser)
     }
 
     async remove(id: string): Promise<void> {

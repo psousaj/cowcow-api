@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, ParseUUIDPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, ParseUUIDPipe, Patch, HttpCode, HttpStatus } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { UserService } from '../services/user.service';
 import { CreateUserDto } from '../dtos/create-user.dto';
@@ -6,6 +6,7 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 import { User } from '../entities/user.entity';
 import { Role } from '@/common/enums';
 import { Roles } from '@/modules/auth/decorators/roles.decorator';
+import { CurrentUser } from '@/modules/auth/decorators/current-user.decorator';
 
 @ApiTags('Usuários')
 @Controller('users')
@@ -13,6 +14,7 @@ export class UserController {
     constructor(private readonly userService: UserService) { }
 
     @Post()
+    @HttpCode(HttpStatus.CREATED)
     @Roles(Role.OWNER)
     @ApiOperation({ summary: 'Cria um novo usuário' })
     @ApiResponse({ status: 201, description: 'Usuário criado com sucesso.', type: User })
@@ -38,7 +40,7 @@ export class UserController {
         return this.userService.findOne(id);
     }
 
-    @Put(':id')
+    @Patch(':id')
     @Roles(Role.OWNER)
     @ApiOperation({ summary: 'Atualiza um usuário pelo ID' })
     @ApiResponse({ status: 200, description: 'Usuário atualizado com sucesso.', type: User })
