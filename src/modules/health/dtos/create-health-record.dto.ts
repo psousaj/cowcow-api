@@ -43,7 +43,7 @@ export class CreateHealthRecordDto {
     nextDate?: Date;
 
     @IsString()
-    @ApiProperty({ description: 'Descrição do evento de saúde', required: false })
+    @ApiProperty({ description: 'Descrição do evento de saúde' })
     description?: string;
 
     @IsOptional()
