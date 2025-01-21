@@ -1,5 +1,5 @@
 import { Controller, Post, Get, Param, Body, Delete, Patch, ParseUUIDPipe } from '@nestjs/common';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 import { HealthService } from '../services/health.service';
 import { CreateHealthRecordDto } from '../dtos/create-health-record.dto';
 import { HealthRecord } from '../entities/health-record.entity';
@@ -15,6 +15,7 @@ export class HealthController {
 
     @Post()
     @Roles(Role.OWNER, Role.OPERATOR)
+    @ApiBody({ type: CreateHealthRecordDto })
     @ApiOperation({ summary: 'Cria um novo registro de saúde do animal' })
     @ApiResponse({ status: 201, description: 'Registro de saúde criado com sucesso.', type: HealthRecord })
     @ApiResponse({ status: 400, description: 'Dados inválidos.' })
@@ -44,8 +45,8 @@ export class HealthController {
     @ApiOperation({ summary: 'Atualiza um registro de saúde do animal pelo ID' })
     @ApiResponse({ status: 200, description: 'Registro de saúde do animal atualizado com sucesso.' })
     @ApiResponse({ status: 404, description: 'Registro de saúde do animal não encontrado.' })
-    async update(@Param('id', new ParseUUIDPipe()) id: string, @Body(new EmptyUpdateBodyPipe()) updateFinancialRecordDto: UpdateHealthRecordDto): Promise<void> {
-        await this.healthService.update(id, updateFinancialRecordDto);
+    async update(@Param('id', new ParseUUIDPipe()) id: string, @Body(new EmptyUpdateBodyPipe()) updateHealthRecordDto: UpdateHealthRecordDto): Promise<void> {
+        await this.healthService.update(id, updateHealthRecordDto);
     }
 
     @Delete(':id')
