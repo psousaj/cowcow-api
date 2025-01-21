@@ -13,7 +13,6 @@ export const databaseProviders = [
                 synchronize: true,
                 ssl: true
             })
-            console.log(path.join(__dirname, '../../modules/**/entities/*.entity{.ts,.js}'))
             return dataSource.initialize()
         },
         inject: [EnvService],
